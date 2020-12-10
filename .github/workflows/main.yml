@@ -7,7 +7,7 @@ on:
       - travis-ci 
 
 jobs:
-  setup:
+  component-testing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,49 +24,22 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        run: ./gradlew build
-  build:
-    needs: setup   
-    runs-on: ubuntu-latest
-    steps:
       - name: Prepare Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
         shell: bash
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Lint 
-        run: |
-          ./gradlew createConfigs testClasses
-          ./gradlew lint --continue
-          npm ci
-          npm run lint 
-  component-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Component Testing 
-        run: |
-          ./gradlew createConfigs componentTests
-          ./gradlew jacocoReport
-          ./gradlew generateTypes
-          npm ci
-          npm run coverage
-  e2e-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Firefox Tests 
-        run: |
-          cd $HOME
-          LATEST_CHROMEDRIVER_VERSION=`curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"`
-          curl -fsSL -o chromedriver.zip "https://chromedriver.storage.googleapis.com/${LATEST_CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver.zip
-          cd $TRAVIS_BUILD_DIR
-          mv src/e2e/resources/test.travis-chrome.properties src/e2e/resources/test.properties
-          ./gradlew createConfigs testClasses generateTypes
-          npm ci
-          npm run build -- --progress=false --serviceWorker=false
-          ./gradlew appengineStart
-          ./gradlew e2eTests
+      - name: Create Configs     
+        run: ./gradlew createConfigs componentTests 
+        shell: bash 
+      - name: Check Backend Coverage 
+        run: ./gradlew jacocoReport
+        shell: bash 
+      - name: Generate Types 
+        run: ./gradlew generateTypes
+        shell: bash 
+      - name: Run tests 
+        run: npm ci 
+        shell: bash 
+      - name: Check Frontend Coverage 
+        run: npm run coverage 
+        shell: bash 
+  
