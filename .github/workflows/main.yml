@@ -24,10 +24,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Prepare Dependancies 
+      - name: Install Backend Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
         shell: bash
-      - name: Create Configs     
+      - name: Run Backend Tests    
         run: ./gradlew createConfigs componentTests 
         shell: bash 
       - name: Check Backend Coverage 
@@ -36,10 +36,13 @@ jobs:
       - name: Generate Types 
         run: ./gradlew generateTypes
         shell: bash 
-      - name: Run tests 
+      - name: Install Frontend Dependancies 
         run: npm ci 
         shell: bash 
-      - name: Check Frontend Coverage 
+      - name: Run Frontend Tests and check Coverage 
         run: npm run coverage 
+        shell: bash
+      - name: Upload to Codecov 
+        run: bash <(curl -s https://codecov.io/bash)
         shell: bash 
   
