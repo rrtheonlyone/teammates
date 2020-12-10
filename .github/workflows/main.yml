@@ -4,7 +4,7 @@ name: Continous Integration Tests
 on: 
   push:
     branches:
-      - travis_ci 
+      - travis-ci 
 
 jobs:
   setup:
