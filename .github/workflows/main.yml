@@ -28,11 +28,13 @@ jobs:
         run: ./gradlew build
   build:
     needs: setup   
+    runs-on: ubuntu-latest
     steps:
       - name: Prepare Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
         shell: bash
   lint:
+    runs-on: ubuntu-latest
     steps:
       - name: Lint 
         run: |
@@ -41,6 +43,8 @@ jobs:
           npm ci
           npm run lint 
   component-tests:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Component Testing 
         run: |
