@@ -166,10 +166,9 @@ public class Browser {
             FirefoxOptions options = new FirefoxOptions().setProfile(profile);
             if (TestProperties.isDevServer()) {
                 options.addArguments("-private");
-            } else {
-                options.addArguments("--headless");
-            }
-
+            } 
+            
+            options.addArguments("--headless");
             return new FirefoxDriver(options);
         }
 
