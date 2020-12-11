@@ -55,6 +55,9 @@ jobs:
         shell: bash 
   E2E-testing:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 1.8
@@ -81,25 +84,19 @@ jobs:
             ${{ runner.os }}-
       - name: Install Backend Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
-        shell: bash
-      - name: Find out where is geckodriver
-        run: whereis geckodriver
-        shell: bash
+      - name: Find out where is chromedriver
+        run: whereis chromedriver 
       - name: Update Property File 
-        run: mv $GITHUB_WORKSPACE/src/e2e/resources/test.travis.properties src/e2e/resources/test.properties
-        shell: bash
+        run: mv $GITHUB_WORKSPACE/src/e2e/resources/test.ci-$E2E_BROWSER.properties src/e2e/resources/test.properties
+        env:
+          E2E_BROWSER: ${{ matrix.browser }}
       - name: Create Config Files 
         run: ./gradlew createConfigs testClasses generateTypes 
-        shell: bash 
       - name: Install Frontend Dependancies
         run: npm ci 
-        shell: bash 
       - name: Build Frontend Bundle 
         run: npm run build -- --progress=false --serviceWorker=false 
-        shell: bash 
       - name: Start App Engine 
         run: ./gradlew appengineStart 
-        shell: bash 
       - name: Start Tests 
         run: ./gradlew e2eTests 
-        shell: bash 
