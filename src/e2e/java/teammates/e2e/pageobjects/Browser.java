@@ -168,7 +168,10 @@ public class Browser {
                 options.addArguments("-private");
             } 
             
-            options.addArguments("--headless");
+            if (TestProperties.RUN_BROWSER_HEADLESS) {
+                options.addArguments("--headless");
+            }
+            
             return new FirefoxDriver(options);
         }
 
@@ -192,6 +195,10 @@ public class Browser {
                     throw new RuntimeException("Chrome user data path not found. Failed to create webdriver.");
                 }
                 options.addArguments("user-data-dir=" + TestProperties.CHROME_USER_DATA_PATH);
+            }
+
+            if (TestProperties.RUN_BROWSER_HEADLESS) {
+                options.addArguments("--headless");
             }
 
             return new ChromeDriver(options);
