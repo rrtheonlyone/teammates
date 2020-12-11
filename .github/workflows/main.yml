@@ -82,6 +82,9 @@ jobs:
       - name: Install Backend Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
         shell: bash
+      - name: Find out where is geckodriver
+        run: whereis geckodriver
+        shell: bash
       - name: Update Property File 
         run: mv $GITHUB_WORKSPACE/src/e2e/resources/test.travis.properties src/e2e/resources/test.properties
         shell: bash
