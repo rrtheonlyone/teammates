@@ -154,6 +154,7 @@ public class InstructorFeedbackSessionsPage extends AppPage {
     }
 
     public void addFeedbackSession(FeedbackSessionAttributes newSession, boolean isUsingTemplate) {
+        waitForElementPresence(By.cssSelector("#btn-add-session"));
         clickAddSessionButton();
         waitForElementPresence(By.cssSelector("#instructions iframe"));
 
