@@ -117,6 +117,8 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      - name: Install xvfb 
+        run: sudo apt-get install xvfb
       - name: Install Backend Dependancies 
         run: ./gradlew downloadDependencies downloadTestDependencies downloadLinters
       - name: Find out where is chromedriver
@@ -134,4 +136,4 @@ jobs:
       - name: Start App Engine 
         run: ./gradlew appengineStart 
       - name: Start Tests 
-        run: ./gradlew e2eTests 
+        run: xvfb-run ./gradlew e2eTests 
