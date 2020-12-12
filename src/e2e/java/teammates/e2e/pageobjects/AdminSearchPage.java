@@ -77,7 +77,7 @@ public class AdminSearchPage extends AppPage {
         studentRow.findElement(By.xpath("//button[text()='Regenerate links']")).click();
 
         waitForConfirmationModalAndClickOk();
-        waitForPageToLoad(true);
+        waitForPageToLoad();
     }
 
     public void clickExpandStudentLinks() {
